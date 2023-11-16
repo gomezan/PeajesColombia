@@ -1,13 +1,7 @@
 % Peajes en Colombia
 rng('default') % For reproducibility
-total = 8; % # de casetas
-n_solo_c = 1; % # de casetas tipo C;
-[tEsperaPromedio, nCarrosEnCola] = simularPeaje(total, n_solo_c)
 
-display(tEsperaPromedio)
-display(nCarrosEnCola)
-
-function [tEsperaProm, nCarros] = simularPeaje(N, n_C)
+function [tEsperaProm, nCarros] = simularPeaje(N, n_c)
 %Tasas de servicio
 t_s_tag = 0.5;
 %t_s_tag = random('Exponential',1000,1,s_tag);
@@ -76,3 +70,10 @@ tEsperaProm=cellfun(@mean,T)
 nCarros=colas
 
 end
+
+total = 8; % # de casetas
+n_solo_c = 1; % # de casetas tipo C;
+x,y =
+
+display()
+display()
