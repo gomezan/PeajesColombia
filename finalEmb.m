@@ -1,18 +1,31 @@
 % Peajes en Colombia
 rng('default') % For reproducibility
-total = 8; % # de casetas
-n_solo_c = 1; % # de casetas tipo C;
-[tEsperaPromedio, nCarrosEnCola] = simularPeaje(total, n_solo_c)
+
+%El codigo asume que las primeras posiciones de los vectores corresponden a
+%los cajeros tipo C (solo tag)
+
+%N, total de casetas | #C, numero de casetas tipo C
+peaje1=[15,2]
+peaje2=[8,1]
+peaje3=[4,0]
+
+peajePrueba=[8,1]
+
+[tEsperaPromedio, nCarrosEnCola] = simularPico(peajePrueba)
 
 display(tEsperaPromedio)
 display(nCarrosEnCola)
 
-function [tEsperaProm, nCarros] = simularPeaje(N, n_C)
+function [tEsperaProm, nCarros] = simularPico(peaje)
 %Tasas de servicio
 t_s_tag = 0.5;
 %t_s_tag = random('Exponential',1000,1,s_tag);
 t_s_efe = 1.2;
 %t_s_efe = random('Exponential',1000,1,s_efe);
+
+N=peaje(1) % # de casetas
+n_C=peaje(2)  % # de casetas tipo C
+
 %T_c arreglo que representa el tiempo de espera acumulado por cada
 %caseta.
 %colas arreglo que representa el tamaño de colas de cada una de las
@@ -22,7 +35,6 @@ t_s_efe = 1.2;
 [T_c, colas, t_last] = deal(zeros(1,N));
 T = cell(1,N);
 
-%tasas_pico = [0.5 1 0.3];
 n_a = [random('Poisson',0.5*30*N) random('Poisson',1.2*60*N) random('Poisson',0.5*30*N)]; % number of arrivals
 t_a = [30*rand(1,n_a(1)) 60*rand(1,n_a(2))+30 30*rand(1,n_a(3))+90]; % times of arrivals
 tag_flag = rand(1,size(t_a,2)) > 0.9; % does the arrival have a tag?
@@ -76,3 +88,6 @@ tEsperaProm=cellfun(@mean,T)
 nCarros=colas
 
 end
+
+
+
