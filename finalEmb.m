@@ -15,7 +15,54 @@ peaje3=[4,1,0];
 %display(tEsperaPromedio)
 %display(nCarrosEnCola)
 
-[finalt,finalc]=busqueda();
+%[finalt,finalc]=busqueda();
+
+%graficar(finalt,"Tiempo de espera")
+%graficar(finalc,"Número de carros")
+%graficarSecciones(finalt)
+%graficarSecciones(finalc)
+
+%Dar los 
+min=
+
+%*******************************************
+
+function graficarSecciones(resultado)
+
+% Crear tres arreglos entre 1 y 10
+arreglo1 = 1:10;
+arreglo2 = 1:10;
+arreglo3 = 1:10;
+
+% Obtener todas las combinaciones posibles
+combinaciones = combvec(arreglo1, arreglo2, arreglo3);
+
+figure;
+
+% Colorbar
+colormap('hot');
+colorbarHandle = colorbar;
+
+for i = 1:10
+    % Seleccionar valores correspondientes a una sección
+    indices = (combinaciones(3, :) == i);
+
+    % Crear subgráfico
+    subplot(2, 5, i);
+    scatter(combinaciones(1, indices), combinaciones(2, indices), 50, resultado(indices), 'filled');
+
+    xlabel('Casetas A');
+    ylabel('Casetas B');
+    title(['Sección casetas C ', num2str(i)]);
+    
+    % mismo colorbar
+    caxis([min(resultado), max(resultado)]);
+end
+
+end
+
+
+%*****************************************************************
 
 function [tEsperaProm, nCarros, tUserTag, tsA] = simularPico(peaje, tagInicial)
 %Tasas de servicio
@@ -112,6 +159,8 @@ tsA=tsAtent;
 end
 
 
+%**************************************************************
+
 function [tEsperaProm, nCarros] =simularCompleto(peaje)
 
 tamTag=0.1;
@@ -140,8 +189,18 @@ nCarros=nCarrosEnCola;
 
 end
 
+%*********************************************************************
 
-function graficar(combinaciones,resultado, titulo)
+function graficar(resultado, titulo)
+
+ % Crea tres arreglos entre 1 y 20
+    casetaA = 1:10;
+    casetaB = 1:10;
+    casetaC = 1:10;
+
+% Obtiene todas las combinaciones posibles
+    combinaciones = combvec(casetaA, casetaB, casetaC);
+
 % Graficar en 3D
 figure;
 scatter3(combinaciones(1, :), combinaciones(2, :), combinaciones(3, :), 50, resultado, 'filled');
@@ -152,7 +211,7 @@ title(titulo);
 
 % Establecer un mapa de colores binario rojo a negro
 %colormap([1 0 0; 0 0 0]);
-colormap('spring');
+colormap('hot');
 
 % Añadir barra de colores
 h = colorbar;
@@ -161,6 +220,7 @@ ylabel(h, 'Resultado');
 end
 
 %Busqueda en malla
+%*********************************************************************************
 function [tproms,cproms]= busqueda()
     % Crea tres arreglos entre 1 y 20
     casetaA = 1:10;
@@ -185,9 +245,6 @@ function [tproms,cproms]= busqueda()
         promts=[promts mean(tEsperaPromedio)];
         promCr=[promCr mean(nCarrosEnCola)];
     end
-
-    graficar(combinaciones,promts,"Tiempo de espera")
-    graficar(combinaciones,promts,"Número de carros")
 
     tproms=promts;
     cproms=promCr;

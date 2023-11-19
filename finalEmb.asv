@@ -15,7 +15,12 @@ peaje3=[4,1,0];
 %display(tEsperaPromedio)
 %display(nCarrosEnCola)
 
-[finalt,finalc]=busqueda();
+%[finalt,finalc]=busqueda();
+
+graficar(finalt,"Tiempo de espera")
+graficar(finalc,"Número de carros")
+
+*****************************************************************
 
 function [tEsperaProm, nCarros, tUserTag, tsA] = simularPico(peaje, tagInicial)
 %Tasas de servicio
@@ -112,6 +117,8 @@ tsA=tsAtent;
 end
 
 
+%**************************************************************
+
 function [tEsperaProm, nCarros] =simularCompleto(peaje)
 
 tamTag=0.1;
@@ -140,26 +147,43 @@ nCarros=nCarrosEnCola;
 
 end
 
+%*********************************************************************
 
-function graficar(combinaciones,resultado)
+function graficar(resultado, titulo)
+
+ % Crea tres arreglos entre 1 y 20
+    casetaA = 1:10;
+    casetaB = 1:10;
+    casetaC = 1:10;
+
+% Obtiene todas las combinaciones posibles
+    combinaciones = combvec(casetaA, casetaB, casetaC);
+
 % Graficar en 3D
 figure;
 scatter3(combinaciones(1, :), combinaciones(2, :), combinaciones(3, :), 50, resultado, 'filled');
-xlabel('Arreglo 1');
-ylabel('Arreglo 2');
-zlabel('Arreglo 3');
-title('Gráfica en 3D de los resultados');
+xlabel('Casetas A');
+ylabel('Casetas B');
+zlabel('Casetas C');
+title(titulo);
+
+% Establecer un mapa de colores binario rojo a negro
+%colormap([1 0 0; 0 0 0]);
+colormap('spring');
 
 % Añadir barra de colores
-colorbar;
+h = colorbar;
+ylabel(h, 'Resultado'); 
+
 end
 
 %Busqueda en malla
+%*********************************************************************************
 function [tproms,cproms]= busqueda()
     % Crea tres arreglos entre 1 y 20
-    casetaA = 1:3;
-    casetaB = 1:3;
-    casetaC = 1:3;
+    casetaA = 1:10;
+    casetaB = 1:10;
+    casetaC = 1:10;
    
     %Vectores para almacenar resultados de simulación
     promts=[];
@@ -179,8 +203,6 @@ function [tproms,cproms]= busqueda()
         promts=[promts mean(tEsperaPromedio)];
         promCr=[promCr mean(nCarrosEnCola)];
     end
-
-    graficar()
 
     tproms=promts;
     cproms=promCr;
