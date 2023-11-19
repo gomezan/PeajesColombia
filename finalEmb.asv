@@ -141,31 +141,25 @@ nCarros=nCarrosEnCola;
 end
 
 
-function graficar(combinaciones,resultado, titulo)
+function graficar(combinaciones,resultado)
 % Graficar en 3D
 figure;
 scatter3(combinaciones(1, :), combinaciones(2, :), combinaciones(3, :), 50, resultado, 'filled');
-xlabel('Casetas A');
-ylabel('Casetas B');
-zlabel('Casetas C');
-title(titulo);
-
-% Establecer un mapa de colores binario rojo a negro
-%colormap([1 0 0; 0 0 0]);
-colormap('spring');
+xlabel('Arreglo 1');
+ylabel('Arreglo 2');
+zlabel('Arreglo 3');
+title('Gráfica en 3D de los resultados');
 
 % Añadir barra de colores
-h = colorbar;
-ylabel(h, 'Resultado'); 
-
+colorbar;
 end
 
 %Busqueda en malla
 function [tproms,cproms]= busqueda()
     % Crea tres arreglos entre 1 y 20
-    casetaA = 1:10;
-    casetaB = 1:10;
-    casetaC = 1:10;
+    casetaA = 1:3;
+    casetaB = 1:3;
+    casetaC = 1:3;
    
     %Vectores para almacenar resultados de simulación
     promts=[];
@@ -186,8 +180,7 @@ function [tproms,cproms]= busqueda()
         promCr=[promCr mean(nCarrosEnCola)];
     end
 
-    graficar(combinaciones,promts,"Tiempo de espera")
-    graficar(combinaciones,promts,"Número de carros")
+    graficar()
 
     tproms=promts;
     cproms=promCr;
