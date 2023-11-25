@@ -2,12 +2,18 @@
 rng('default') % For reproducibility
 
 %El codigo asume que las primeras posiciones de los vectores corresponden a
-%los cajeros tipo C (solo tag)
+%los cajeros tipo C (solo tag), las del medio son tipo B y las primeras
+%tipo A
 
 %N, total de casetas | #B numero de casetas tipo B | #C, numero de casetas tipo C
 peaje1=[15,3,2];
 peaje2=[8,2,1];
 peaje3=[4,1,0];
+
+
+%[tEsperaProm, nCarros, tUserTag, tsA] = simularPico(peaje2, 0.1);
+%tEsperaProm, 
+%nCarros
 
 %[tEsperaPromedio,nCarrosEnCola ]=simularCompleto(peaje2)
 
@@ -22,11 +28,9 @@ peaje3=[4,1,0];
 %graficarSecciones(finalt)
 %graficarSecciones(finalc)
 
-%Dar los 
-min=
 
 %*******************************************
-
+% Graficar secciones de los 52 fines de semana
 function graficarSecciones(resultado)
 
 % Crear tres arreglos entre 1 y 10
@@ -63,13 +67,11 @@ end
 
 
 %*****************************************************************
-
+%Función 1 fin de semana
 function [tEsperaProm, nCarros, tUserTag, tsA] = simularPico(peaje, tagInicial)
 %Tasas de servicio
 t_s_tag = 0.5;
-%t_s_tag = random('Exponential',1000,1,s_tag);
 t_s_efe = 1.2;
-%t_s_efe = random('Exponential',1000,1,s_efe);
 
 N=peaje(1); % # de casetas
 n_C=peaje(3);  % # de casetas tipo C
@@ -84,7 +86,9 @@ n_B=peaje(2);  % # de casetas tipo B
 %tsTag es un arreglo que almacena los tiempos de espera de usuarios tag.
 [T_c, colas, t_last] = deal(zeros(1,N));
 T = cell(1,N);
+C = cell(1,N);
 tsTag = [];
+
 
 n_a = [random('Poisson',0.5*30*N) random('Poisson',1.2*60*N) random('Poisson',0.5*30*N)]; % number of arrivals
 t_a = [30*rand(1,n_a(1)) 60*rand(1,n_a(2))+30 30*rand(1,n_a(3))+90]; % times of arrivals
@@ -92,23 +96,38 @@ t_a = [30*rand(1,n_a(1)) 60*rand(1,n_a(2))+30 30*rand(1,n_a(3))+90]; % times of 
 noTag=1-tagInicial;
 tag_flag = rand(1,size(t_a,2)) > noTag; % does the arrival have a tag?
 
-%Se crea el vector t_ de eventos contiene tiempos y tipo. 
+%Se crea el vector de eventos t_ contiene los tiempos, tipo (llegada o salida) y si es de tag o no. 
 t_ = sort(t_a)'; % sorted arrival times
 t_(:,2) = zeros(size(t_,1),1); % arrival flag
+t_(:,3)=tag_flag;
 t = t_(1);
-fin = 120; % tiempo de simulación
-c = 0; % contador
 
-tam=size(t_,1);
+fin = 120; % tiempo de simulación
+
+tam=size(t_,1)*2;
 
 for i =  1:tam
-    %t es el tiempo actual y type el tipo de evento
+
+    %Revisar si entra en la ventana de análisis, es decir:
+    %Se encuentra dentro del vector de eventos
+    long=size(t_,1);
+    if i>long
+        break
+    end
+
+    %t es el tiempo actual, type el tipo de evento y tags indica si el usuario tiene tag 
     t = t_(i,1);
-    type = t_(i,2);    
-    
+    type = t_(i,2); 
+    tags= t_(i,3);
+
+    %Se encuentre dentro de los 120 minutos de tiempo?
+    if t>fin
+        break
+    end
+
     if ~type % arrival event
         %Selecciona la caseta con la cola más corta de acuerdo a su tipo de pago
-        if tag_flag(i)
+        if tags
             [~, m] = min(colas); % Shortest queue index
             t_s = random('Exponential',t_s_tag);
         else
@@ -124,16 +143,19 @@ for i =  1:tam
         %El tiempo acumulado por caseta tiene en cuenta el tiempo
         %transcurrido hasta el tiempo actual
         T_c(m) = T_c(m) - (t - t_last(m)) + t_s; % cumulative time for each queue
-        t_(end+1,:) = [t + T_c(m), m]; %#ok<SAGROW> % new departure time %si es una salida el tipo es el indice de la caseta que lo atiende. 
+        t_(end+1,:) = [t + T_c(m), m, tags]; %#ok<SAGROW> % new departure time %si es una salida el tipo es el indice de la caseta que lo atiende. 
         t_ = sortrows(t_,1);
 
-        if tag_flag(i)
+        %Busca almacenar los tiempos de espera promedio de los usuarios de tag  
+        if tags
          tsTag = [tsTag, T_c(m)];
         end
         
         %concatena el contenido de T_c(m) al contenido previo de T{m}
         T{m} = [T{m} T_c(m)]; % waiting time
         t_last(m) = t;
+        % Se repite el procedimiento pero esta vez con el tamaño de las colas 
+        C{m} = [C{m} colas(m)];
         
     else % departure event
         colas(type) = colas(type) - 1;
@@ -145,10 +167,11 @@ for i =  1:tam
 end
 
 tEsperaProm=cellfun(@mean,T);
-nCarros=colas;
+nCarros=cellfun(@mean,C);
 tUserTag=tsTag;
 tsAtent=[];
 
+%Busca almacenar los tiempos de espera de las casetas tipo A
 soloA=T(n_C + n_B+ 1:N);
 for i = 1:length(soloA)
     tsAtent = [tsAtent, soloA{i}];
@@ -160,7 +183,7 @@ end
 
 
 %**************************************************************
-
+%Simluar 52 fines de semana
 function [tEsperaProm, nCarros] =simularCompleto(peaje)
 
 tamTag=0.1;
@@ -193,7 +216,7 @@ end
 
 function graficar(resultado, titulo)
 
- % Crea tres arreglos entre 1 y 20
+ % Crea tres arreglos entre 1 y 10
     casetaA = 1:10;
     casetaB = 1:10;
     casetaC = 1:10;
@@ -209,7 +232,7 @@ ylabel('Casetas B');
 zlabel('Casetas C');
 title(titulo);
 
-% Establecer un mapa de colores binario rojo a negro
+% Establecer un mapa de colores
 %colormap([1 0 0; 0 0 0]);
 colormap('hot');
 
@@ -222,7 +245,7 @@ end
 %Busqueda en malla
 %*********************************************************************************
 function [tproms,cproms]= busqueda()
-    % Crea tres arreglos entre 1 y 20
+    % Crea tres arreglos entre 1 y 10
     casetaA = 1:10;
     casetaB = 1:10;
     casetaC = 1:10;
