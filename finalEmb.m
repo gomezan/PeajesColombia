@@ -13,18 +13,20 @@ peaje3=[4,1,0];
 bestPeaje=[8,1,6];
 
 %1 fin de semana 
-%[tEsperaProm, nCarros, tUserTag, tsA] = simularPico(peaje2, 0.1);
+[tEsperaProm, nCarros, tUserTag, tsA] = simularPico(peaje1, 0.1);
 %tEsperaProm, 
 %nCarros
+plotBarras(tEsperaProm,"tiempo de espera", "Peaje1",peaje1)
 
 %52 fines de semana
-[tEsperaPromedio,nCarrosEnCola,casetas]=simularCompleto(bestPeaje)
+%[tEsperaPromedio,nCarrosEnCola,casetas]=simularCompleto(bestPeaje)
+
 
 %Imprimir resultados finales de 52 fines de semana
 %display(tEsperaPromedio)
 %display(nCarrosEnCola)
 %graficarTiemposCasetas(casetas)
-graficarCasetaUnica(casetas, 3, "Tipo A")
+%graficarCasetaUnica(casetas, 3, "Tipo A")
 
 
 %Barrer todas las combinaciones
@@ -35,8 +37,38 @@ graficarCasetaUnica(casetas, 3, "Tipo A")
 %graficarSecciones(finalc,0)
 
 
-%****************************************
+%Esta función hace el grafico de barras de un único peaje con respecto a
+%una variable por caseta.
+%***************************************
 
+function plotBarras(arreglo,valor,peajeTitulo,peaje)
+   
+    figure;
+    hold on; 
+    
+    % Barras casetas tipo C
+    bar(1:peaje(3), arreglo(1:peaje(3)), 'b');
+
+    % Barras casetas tipo B
+    bar(peaje(3)+1:peaje(3)+peaje(2), arreglo(peaje(3)+1:peaje(3)+peaje(2)), 'r');
+
+    % Barras casetas tipo A
+    bar(peaje(3)+peaje(2)+1:length(arreglo), arreglo(peaje(3)+peaje(2)+1:end), 'g');
+    
+    hold off;  
+
+    xlabel('Peajes');
+    ylabel(valor);
+    title(peajeTitulo);
+
+    % Agrega una leyenda
+    legend('Casetas tipo C', 'Casetas tipo B', 'Casetas tipo A');
+end
+
+
+%Esta función grafica por caseta el tiempo de espera despues de los 52
+%fines de semana
+%****************************************
 function graficarCasetaUnica(data, tipo, leyenda)
 
 datos = data{:,tipo};
@@ -53,6 +85,8 @@ grid on;
 
 end
 
+%Esta función grafica el tiempo de espera despues de los 52
+%fines de semana de todas las casetas
 %*****************************************
 function graficarTiemposCasetas(data)
 
@@ -278,8 +312,9 @@ nCarros=nCarrosEnCola;
 
 end
 
+%Esta función grafica todas las combinaciones realizadas por la busqueda en
+%malla
 %*********************************************************************
-
 function graficar(resultado, titulo)
 
  % Crea tres arreglos entre 1 y 10
