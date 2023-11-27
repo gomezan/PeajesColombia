@@ -19,20 +19,20 @@ bestPeaje=[18,6,6];
 %plotBarras(tEsperaProm,"tiempo de espera", "Peaje1",peaje1)
 
 %52 fines de semana
-%[tEsperaPromedio,nCarrosEnCola,casetas]=simularCompleto(bestPeaje)
+[tEsperaPromedio,nCarrosEnCola,casetas]=simularCompleto(bestPeaje)
 
 
 %Imprimir resultados finales de 52 fines de semana
 %display(tEsperaPromedio)
 %display(nCarrosEnCola)
-%graficarTiemposCasetas(casetas)
+graficarTiemposCasetas(casetas)
 %graficarCasetaUnica(casetas, 1, "Tipo C")
 
 
 %Barrer todas las combinaciones
 %[finalt,finalc]=busqueda();
 %graficar(finalt,"Tiempo de espera")
-graficar(finalc,"Tamaño de cola")
+%graficar(finalc,"Tamaño de cola")
 %graficarSecciones(finalt,1)
 %graficarSecciones(finalc,1)
 
