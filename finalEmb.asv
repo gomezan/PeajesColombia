@@ -10,7 +10,7 @@ peaje1=[15,3,2];
 peaje2=[8,2,1];
 peaje3=[4,1,0];
 
-bestPeaje=[8,1,6];
+bestPeaje=[6,6,6];
 
 %1 fin de semana 
 %[tEsperaProm, nCarros, tUserTag, tsA] = simularPico(peaje1, 0.1);
@@ -19,13 +19,13 @@ bestPeaje=[8,1,6];
 %plotBarras(tEsperaProm,"tiempo de espera", "Peaje1",peaje1)
 
 %52 fines de semana
-%[tEsperaPromedio,nCarrosEnCola,casetas]=simularCompleto(bestPeaje)
+[tEsperaPromedio,nCarrosEnCola,casetas]=simularCompleto(bestPeaje)
 
 
 %Imprimir resultados finales de 52 fines de semana
 %display(tEsperaPromedio)
 %display(nCarrosEnCola)
-%graficarTiemposCasetas(casetas)
+graficarTiemposCasetas(casetas)
 %graficarCasetaUnica(casetas, 3, "Tipo A")
 
 
@@ -33,8 +33,8 @@ bestPeaje=[8,1,6];
 %[finalt,finalc]=busqueda();
 %graficar(finalt,"Tiempo de espera")
 %graficar(finalc,"Número de carros")
-%graficarSecciones(finalt,0)
-graficarSecciones(finalc,0)
+%graficarSecciones(finalt,1)
+%graficarSecciones(finalc,1)
 
 
 %Esta función hace el grafico de barras de un único peaje con respecto a
@@ -57,7 +57,7 @@ function plotBarras(arreglo,valor,peajeTitulo,peaje)
     
     hold off;  
 
-    xlabel('Peajes');
+    xlabel('Casetas de peaje');
     ylabel(valor);
     title(peajeTitulo);
 
@@ -79,7 +79,7 @@ plot(indices, datos);
 
 xlabel('Fines de semana');
 ylabel('Tiempo de espera');
-title('Tiempode espera por tipo de caseta');
+title('Tiempo de espera por tipo de caseta');
 legend(leyenda);
 grid on;
 
@@ -110,10 +110,10 @@ end
 % Graficar secciones de los 52 fines de semana
 function graficarSecciones(resultado, tipo)
 
-% Crear tres arreglos entre 1 y 10
-arreglo1 = 1:10;
-arreglo2 = 1:10;
-arreglo3 = 1:10;
+% Crear tres arreglos entre 1 y 8
+arreglo1 = 1:8;
+arreglo2 = 1:8;
+arreglo3 = 1:8;
 
 % Obtener todas las combinaciones posibles
 combinaciones = combvec(arreglo1, arreglo2, arreglo3);
@@ -127,7 +127,7 @@ if(tipo)
 colorbarHandle = colorbar;
 end
 
-for i = 1:10
+for i = 1:8
     % Seleccionar valores correspondientes a una sección
     indices = (combinaciones(3, :) == i);
 
@@ -283,7 +283,7 @@ function [tEsperaProm, nCarros, tsCas] =simularCompleto(peaje)
 tamTag=0.1;
 tsCas=cell(1,3);
 
-tEsperaProm=[];
+tesperaprom=[];
 ncarros=[];
 
 for i=1:54
@@ -307,10 +307,14 @@ tsCas{1} = [tsCas{1} promCasetas(1)];
 tsCas{2} = [tsCas{2} promCasetas(2)];
 tsCas{3} = [tsCas{3} promCasetas(3)];
 
-tEsperaProm=[tEsperaProm tEsperaPromedio];
+tesperaprom=[tesperaprom tEsperaPromedio];
 ncarros=[ncarros nCarrosEnCola];
 
-end 
+end
+
+tEsperaProm=mean(tesperaprom, "omitnan");
+nCarros=mean(ncarros, "omitnan");
+
 end
 
 %Esta función grafica todas las combinaciones realizadas por la busqueda en
@@ -319,9 +323,9 @@ end
 function graficar(resultado, titulo)
 
  % Crea tres arreglos entre 1 y 10
-    casetaA = 1:10;
-    casetaB = 1:10;
-    casetaC = 1:10;
+    casetaA = 1:8;
+    casetaB = 1:8;
+    casetaC = 1:8;
 
 % Obtiene todas las combinaciones posibles
     combinaciones = combvec(casetaA, casetaB, casetaC);
@@ -348,9 +352,9 @@ end
 %*********************************************************************************
 function [tproms,cproms]= busqueda()
     % Crea tres arreglos entre 1 y 10
-    casetaA = 1:10;
-    casetaB = 1:10;
-    casetaC = 1:10;
+    casetaA = 1:8;
+    casetaB = 1:8;
+    casetaC = 1:8;
    
     %Vectores para almacenar resultados de simulación
     promts=[];

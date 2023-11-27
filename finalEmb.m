@@ -10,7 +10,7 @@ peaje1=[15,3,2];
 peaje2=[8,2,1];
 peaje3=[4,1,0];
 
-bestPeaje=[8,1,6];
+bestPeaje=[18,6,6];
 
 %1 fin de semana 
 %[tEsperaProm, nCarros, tUserTag, tsA] = simularPico(peaje1, 0.1);
@@ -26,15 +26,15 @@ bestPeaje=[8,1,6];
 %display(tEsperaPromedio)
 %display(nCarrosEnCola)
 %graficarTiemposCasetas(casetas)
-%graficarCasetaUnica(casetas, 3, "Tipo A")
+%graficarCasetaUnica(casetas, 1, "Tipo C")
 
 
 %Barrer todas las combinaciones
-[finalt,finalc]=busqueda();
+%[finalt,finalc]=busqueda();
 %graficar(finalt,"Tiempo de espera")
-%graficar(finalc,"Número de carros")
-%graficarSecciones(finalt,0)
-%graficarSecciones(finalc,0)
+graficar(finalc,"Tamaño de cola")
+%graficarSecciones(finalt,1)
+%graficarSecciones(finalc,1)
 
 
 %Esta función hace el grafico de barras de un único peaje con respecto a
@@ -110,10 +110,10 @@ end
 % Graficar secciones de los 52 fines de semana
 function graficarSecciones(resultado, tipo)
 
-% Crear tres arreglos entre 1 y 10
-arreglo1 = 1:10;
-arreglo2 = 1:10;
-arreglo3 = 1:10;
+% Crear tres arreglos entre 1 y 8
+arreglo1 = 1:8;
+arreglo2 = 1:8;
+arreglo3 = 1:8;
 
 % Obtener todas las combinaciones posibles
 combinaciones = combvec(arreglo1, arreglo2, arreglo3);
@@ -127,7 +127,7 @@ if(tipo)
 colorbarHandle = colorbar;
 end
 
-for i = 1:10
+for i = 1:8
     % Seleccionar valores correspondientes a una sección
     indices = (combinaciones(3, :) == i);
 
@@ -312,8 +312,8 @@ ncarros=[ncarros nCarrosEnCola];
 
 end
 
-tEsperaProm=mean(tesperaprom);
-nCarros=mean(ncarros);
+tEsperaProm=mean(tesperaprom, "omitnan");
+nCarros=mean(ncarros, "omitnan");
 
 end
 
@@ -323,9 +323,9 @@ end
 function graficar(resultado, titulo)
 
  % Crea tres arreglos entre 1 y 10
-    casetaA = 1:10;
-    casetaB = 1:10;
-    casetaC = 1:10;
+    casetaA = 1:8;
+    casetaB = 1:8;
+    casetaC = 1:8;
 
 % Obtiene todas las combinaciones posibles
     combinaciones = combvec(casetaA, casetaB, casetaC);
@@ -352,9 +352,9 @@ end
 %*********************************************************************************
 function [tproms,cproms]= busqueda()
     % Crea tres arreglos entre 1 y 10
-    casetaA = 1:10;
-    casetaB = 1:10;
-    casetaC = 1:10;
+    casetaA = 1:8;
+    casetaB = 1:8;
+    casetaC = 1:8;
    
     %Vectores para almacenar resultados de simulación
     promts=[];
