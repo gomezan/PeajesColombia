@@ -16,7 +16,7 @@ bestPeaje=[8,1,6];
 [tEsperaProm, nCarros, tUserTag, tsA] = simularPico(peaje1, 0.1);
 %tEsperaProm, 
 %nCarros
-plotBarras(tEsperaProm,"tiempo de espera", "Peaje1",peaje1)
+plotBarras(tEsperaProm,"tiempo de espera [min]", "Peaje1",peaje1)
 
 %52 fines de semana
 %[tEsperaPromedio,nCarrosEnCola,casetas]=simularCompleto(bestPeaje)
@@ -57,7 +57,7 @@ function plotBarras(arreglo,valor,peajeTitulo,peaje)
     
     hold off;  
 
-    xlabel('Peajes');
+    xlabel('Casetas de peaje');
     ylabel(valor);
     title(peajeTitulo);
 
