@@ -13,10 +13,10 @@ peaje3=[4,1,0];
 bestPeaje=[8,1,6];
 
 %1 fin de semana 
-[tEsperaProm, nCarros, tUserTag, tsA] = simularPico(peaje1, 0.1);
+%[tEsperaProm, nCarros, tUserTag, tsA] = simularPico(peaje1, 0.1);
 %tEsperaProm, 
 %nCarros
-plotBarras(tEsperaProm,"tiempo de espera", "Peaje1",peaje1)
+%plotBarras(tEsperaProm,"tiempo de espera", "Peaje1",peaje1)
 
 %52 fines de semana
 %[tEsperaPromedio,nCarrosEnCola,casetas]=simularCompleto(bestPeaje)
@@ -30,7 +30,7 @@ plotBarras(tEsperaProm,"tiempo de espera", "Peaje1",peaje1)
 
 
 %Barrer todas las combinaciones
-%[finalt,finalc]=busqueda();
+[finalt,finalc]=busqueda();
 %graficar(finalt,"Tiempo de espera")
 %graficar(finalc,"Número de carros")
 %graficarSecciones(finalt,0)
@@ -276,13 +276,15 @@ end
 end
 
 
-
 %**************************************************************
 %Simluar 52 fines de semana
 function [tEsperaProm, nCarros, tsCas] =simularCompleto(peaje)
 
 tamTag=0.1;
 tsCas=cell(1,3);
+
+tesperaprom=[];
+ncarros=[];
 
 for i=1:54
 [tEsperaPromedio, nCarrosEnCola, tEsperaTag, tEsperaCasetas] = simularPico(peaje,tamTag);
@@ -305,10 +307,13 @@ tsCas{1} = [tsCas{1} promCasetas(1)];
 tsCas{2} = [tsCas{2} promCasetas(2)];
 tsCas{3} = [tsCas{3} promCasetas(3)];
 
-end 
+tesperaprom=[tesperaprom tEsperaPromedio];
+ncarros=[ncarros nCarrosEnCola];
 
-tEsperaProm=tEsperaPromedio;
-nCarros=nCarrosEnCola;
+end
+
+tEsperaProm=mean(tesperaprom);
+nCarros=mean(ncarros);
 
 end
 
@@ -366,8 +371,8 @@ function [tproms,cproms]= busqueda()
         C = combinaciones(3, i);
         N=A+B+C;
         [tEsperaPromedio,nCarrosEnCola ]=simularCompleto([N,B,C])
-        promts=[promts mean(tEsperaPromedio)];
-        promCr=[promCr mean(nCarrosEnCola)];
+        promts=[promts tEsperaPromedio];
+        promCr=[promCr nCarrosEnCola];
     end
 
     tproms=promts;

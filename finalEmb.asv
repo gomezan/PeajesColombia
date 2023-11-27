@@ -13,10 +13,10 @@ peaje3=[4,1,0];
 bestPeaje=[8,1,6];
 
 %1 fin de semana 
-[tEsperaProm, nCarros, tUserTag, tsA] = simularPico(peaje1, 0.1);
+%[tEsperaProm, nCarros, tUserTag, tsA] = simularPico(peaje1, 0.1);
 %tEsperaProm, 
 %nCarros
-plotBarras(tEsperaProm,"tiempo de espera", "Peaje1",peaje1)
+%plotBarras(tEsperaProm,"tiempo de espera", "Peaje1",peaje1)
 
 %52 fines de semana
 %[tEsperaPromedio,nCarrosEnCola,casetas]=simularCompleto(bestPeaje)
@@ -34,7 +34,7 @@ plotBarras(tEsperaProm,"tiempo de espera", "Peaje1",peaje1)
 %graficar(finalt,"Tiempo de espera")
 %graficar(finalc,"Número de carros")
 %graficarSecciones(finalt,0)
-%graficarSecciones(finalc,0)
+graficarSecciones(finalc,0)
 
 
 %Esta función hace el grafico de barras de un único peaje con respecto a
@@ -66,7 +66,8 @@ function plotBarras(arreglo,valor,peajeTitulo,peaje)
 end
 
 
-%Esta función grafica 
+%Esta función grafica por caseta el tiempo de espera despues de los 52
+%fines de semana
 %****************************************
 function graficarCasetaUnica(data, tipo, leyenda)
 
@@ -84,6 +85,8 @@ grid on;
 
 end
 
+%Esta función grafica el tiempo de espera despues de los 52
+%fines de semana de todas las casetas
 %*****************************************
 function graficarTiemposCasetas(data)
 
@@ -273,13 +276,15 @@ end
 end
 
 
-
 %**************************************************************
 %Simluar 52 fines de semana
 function [tEsperaProm, nCarros, tsCas] =simularCompleto(peaje)
 
 tamTag=0.1;
 tsCas=cell(1,3);
+
+tEsperaProm=[];
+ncarros=[];
 
 for i=1:54
 [tEsperaPromedio, nCarrosEnCola, tEsperaTag, tEsperaCasetas] = simularPico(peaje,tamTag);
@@ -302,15 +307,15 @@ tsCas{1} = [tsCas{1} promCasetas(1)];
 tsCas{2} = [tsCas{2} promCasetas(2)];
 tsCas{3} = [tsCas{3} promCasetas(3)];
 
+tEsperaProm=[tEsperaProm tEsperaPromedio];
+ncarros=[ncarros nCarrosEnCola];
+
 end 
-
-tEsperaProm=tEsperaPromedio;
-nCarros=nCarrosEnCola;
-
 end
 
+%Esta función grafica todas las combinaciones realizadas por la busqueda en
+%malla
 %*********************************************************************
-
 function graficar(resultado, titulo)
 
  % Crea tres arreglos entre 1 y 10
@@ -362,8 +367,8 @@ function [tproms,cproms]= busqueda()
         C = combinaciones(3, i);
         N=A+B+C;
         [tEsperaPromedio,nCarrosEnCola ]=simularCompleto([N,B,C])
-        promts=[promts mean(tEsperaPromedio)];
-        promCr=[promCr mean(nCarrosEnCola)];
+        promts=[promts tEsperaPromedio];
+        promCr=[promCr nCarrosEnCola];
     end
 
     tproms=promts;
