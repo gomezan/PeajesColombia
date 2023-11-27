@@ -57,7 +57,7 @@ function plotBarras(arreglo,valor,peajeTitulo,peaje)
     
     hold off;  
 
-    xlabel('Peajes');
+    xlabel('Casetas de peaje');
     ylabel(valor);
     title(peajeTitulo);
 
@@ -79,7 +79,7 @@ plot(indices, datos);
 
 xlabel('Fines de semana');
 ylabel('Tiempo de espera');
-title('Tiempode espera por tipo de caseta');
+title('Tiempo de espera por tipo de caseta');
 legend(leyenda);
 grid on;
 
